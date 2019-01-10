@@ -1,2 +1,2 @@
 # RestaurantPanel
-RestaurantPanel? small vue app for delivery project 
+RestaurantPanel, small vue app for delivery project 
