@@ -26,7 +26,7 @@
         </div>
 
         <input type="number" hidden name="minutes" v-model="minutes">
-        <input type="submit">
+        <input type="submit" value="Отправить">
       </form>
     </div>
 

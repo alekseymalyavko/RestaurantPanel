@@ -2,11 +2,11 @@
   <div class="">
     
     <div class="form">
-      <h2 class="">Login</h2>
+      <h2 class="">Вход</h2>
       <form name="auth_form" @submit="autharization">
-        <input type="text" placeholder="Login" name="login" v-model="login" required>
-        <input type="password" placeholder="Password" name="password" v-model="password" required>
-        <input type="submit">
+        <input type="text" placeholder="Логин" name="login" v-model="login" required>
+        <input type="password" placeholder="Пароль" name="password" v-model="password" required>
+        <input type="submit" value="Войти">
       </form>
     </div>
 
