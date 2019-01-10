@@ -1,4 +1,4 @@
-# meal-prep
+# ReastarauntPanel
 
 ## Project setup
 ```
