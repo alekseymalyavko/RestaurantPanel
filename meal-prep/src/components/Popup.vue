@@ -1,6 +1,5 @@
 <template>
-  <div class="popup_wrapper">
-    
+  <div class="popup_wrapper" v-show="false">
     <div class="form">
       <form name="popup" @submit="sendOrder">
         <h2>Принять заказ</h2>
@@ -41,9 +40,6 @@ export default {
       minutes: 15
     }
   },
-  props: {
-
-  },
   methods: {
     sendOrder: function(e) {
       e.preventDefault();
@@ -55,6 +51,21 @@ export default {
 </script>
 
 <style scoped lang="less">
+  .popup {
+    &_wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      background: #000000d1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
   .form {
     display: block;
     margin: auto;
@@ -67,7 +78,7 @@ export default {
   }
   .calculator {
     position: relative;
-    padding: 60px 0;
+    padding: 40px 0;
 
     &_block {
       width: 350px;
@@ -78,6 +89,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      user-select:none;
 
       & .calculator_sign {
         display: flex;
@@ -95,7 +107,7 @@ export default {
         width: 135px;
         background: #fff;
         position: absolute;
-        top: 35px;
+        top: 17px;
         left: 26%;
         height: 70px;
         padding: 20px;

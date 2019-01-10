@@ -124,7 +124,7 @@ export default {
   },
   methods: {
     showlist: (e) => {
-      e.target.nextElementSibling.classList.toggle("active")
+      e.target.classList.toggle("active")
     },
     openOrder: (e) => {
       console.log(e)
@@ -137,20 +137,47 @@ export default {
 .orders_panel {
 
   .orders_type {
-    margin: 15px 0;
+    margin: 5px 0;
     cursor: pointer;
 
     &_header {
       display: flex;
       justify-content: space-between;
-      padding: 10px 0;
+      padding: 15px 5px;
       background: white;
+      pointer-events: none;
+      padding-left: 30px;
+      position: relative;
+
+      & span {
+        font-weight: 600;
+      }
+
+      &:after {
+        content: "\2039";
+        transform: rotate(270deg);
+        position: absolute;
+        left: 10px;
+        font-weight: 600;
+        font-size: 21px;
+        top: 12px;
+        color: #0070ff;
+      }
+
     }
     &_list {
       display: none;
-
-      &.active {
-        display: block;
+    }
+    &.active {
+      .orders_type {
+        &_header {
+          &:after {
+            transform: rotate(90deg);
+          }
+        }
+        &_list {
+          display: block;
+        } 
       }
     }
   }
@@ -159,9 +186,14 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: start;
-    padding: 10px 0;
-    background: #a2a2a2;
-    border: 1px solid red;
+    padding: 10px 5px;
+    font-size: 14px;
+    margin: 3px 0;
+    // background: #a2a2a2;
+    &:hover {
+      background: #0070ff;
+      color: #fff;
+    }
 
     & span {
       padding: 0 3px;

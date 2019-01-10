@@ -4,8 +4,7 @@
   </div>
 </template>
 
-<script>
-// @ is an alias to /src
+<script> 
 import Auth from "@/components/Auth.vue";
 
 export default {

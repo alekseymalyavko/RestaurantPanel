@@ -1,8 +1,8 @@
 <template>
   <div class="current_order_panel">
     <div class="current_order_panel_header">
-      <div>
-        Новый Ожидается доставка
+      <div class="current_order_panel_header_type">
+        Новый
       </div>
 
       <div class="acceptButton">
@@ -27,12 +27,18 @@
       </div>
     </div>
 
+    <Popup v-bind="order"/>.
+  
   </div>
 </template>
 
 <script>
+import Popup from "@/components/Popup.vue"
 export default {
   name: "CurrentOrder",
+  components: {
+    Popup
+  },
   data () {
     return {
       order: {
@@ -72,7 +78,7 @@ export default {
 
   },
   props: {
-
+    showPopup: true,
   },
   methods: {
 
@@ -87,14 +93,28 @@ export default {
       &_header {
         display: flex;
         justify-content: space-between;
-        height: 40px;
-        background: white;
+        align-items: center;
+        padding-bottom: 15px;
+
+        &_type {
+          padding: 3px 10px;
+          background: #0070ff;
+          border-radius: 15px;
+          color: #fff;
+        }
       }
     }
     &_info {
-      padding: 20px;
+      // padding: 20px;
       text-align: left;
+      &_list {
+        padding: 4px 10px;
 
+        &_dish {
+          display: flex;
+          justify-content: space-between;
+        }
+      }
       &_total {
         padding-top: 25px;
 
@@ -103,10 +123,14 @@ export default {
           display: flex;
           justify-content: space-between;
         }
-
+        &_calc {
+          font-size: 14px;
+        }
         &_price {
           padding: 10px;
           background: #fff;
+          border-radius:3px;
+          font-weight: 600;
         }
       }
     }
@@ -120,6 +144,7 @@ export default {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    border-radius: 3px;
   }
   
 </style>

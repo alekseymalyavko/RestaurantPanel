@@ -15,7 +15,6 @@
       </div>
     
     </div>
-    <Popup/>
   </div>
 
 </template>
@@ -53,25 +52,30 @@ export default {
     &_panel {
       display:flex;
       flex-flow: row wrap;
+
       & > * {
-        padding: 1em;
         flex: 1 100%;
       }
+      
       &_header {
         background: #89c300;
         display: flex;
         justify-content: space-between;
-        height: 25px;
+        align-items: center;
+        height: 45px;
+        padding: 0 15px;
       }
 
       &_aside {
         background: #eaeaea;
         flex: 1;
+        height: 80vh
       }
 
       &_body {
-        background: grey;
-        flex: 4 0px;
+        padding: 10px;
+        flex: 3 0px;
+        background: #d8d8d8;
       }
     }
   }
