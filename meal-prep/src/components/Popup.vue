@@ -1,8 +1,9 @@
 <template>
-  <div class="popup_wrapper" v-show="false">
+  <div class="popup_wrapper" v-if="openPopup">
     <div class="form">
+
       <form name="popup" @submit="sendOrder">
-        <h2>Принять заказ</h2>
+        <h2>Принять заказ</h2><span class="close_button" @click="$emit('close')">×</span>
         <p>Клиент ожидает доставку заказа в 16:56</p>
         
         <div class="calculator">
@@ -24,6 +25,7 @@
           </div>
         </div>
 
+        <input type="number" hidden name="orderId" v-model="orderId">
         <input type="number" hidden name="minutes" v-model="minutes">
         <input type="submit" value="Отправить">
       </form>
@@ -33,18 +35,49 @@
 </template>
 
 <script>
+import { HTTP } from '@/request/http-common'
+
 export default {
   name: "Popup",
   data () {
     return {
-      minutes: 15
+      orderId: this.currentOrder.id,
+      minutes: 15,
     }
+  },
+  props: {
+    currentOrder: Object,
+    openPopup: Boolean,
   },
   methods: {
     sendOrder: function(e) {
       e.preventDefault();
-      // const minutes = this.minutes;
-      console.log(this.minutes)
+      console.log(this.orderId, this.minutes)
+      
+      //для готовки
+      HTTP.post(`/system/restaurant/order/${this.orderId}/readylTime`, {
+        body: { minutes:this.minutes }
+      })
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch(e => {
+        this.errors.push(e)
+      })
+
+      //для доставки
+      HTTP.post(`/system/restaurant/order/${this.orderId}/readyToDelivery`, {
+        body: { minutes:this.minutes }
+      })
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch(e => {
+        this.errors.push(e)
+      })
+
+      alert("Отправленно");
+      this.$emit('close');
     }
   }
 };
@@ -75,6 +108,7 @@ export default {
     padding: 10px;
     border-radius: 3px;
     border: 1px solid #b9b9b9;
+    position: relative;
   }
   .calculator {
     position: relative;
@@ -120,5 +154,14 @@ export default {
         }
       }
     }
+  }
+  .close_button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    line-height: 0.6;
+    font-size: 40px;
+    padding: 5px;
+    cursor: pointer;
   }
 </style>

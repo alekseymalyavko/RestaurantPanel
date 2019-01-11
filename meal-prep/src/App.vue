@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <div id="nav">
+    <!-- <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/main">Main</router-link>
-    </div>
+    </div> -->
     <router-view/>
   </div>
 </template>
@@ -56,6 +56,7 @@
         margin-top: 20px;
         color: #fff;
         font-weight: 600;
+        border:none;
       }
     }
   }

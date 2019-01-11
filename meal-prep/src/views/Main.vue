@@ -3,15 +3,15 @@
     <div class="main_panel">
       <div class="main_panel_header">
         <div>Обработка заказа</div> 
-        <div>Заказ {{order}}</div>
+        <div>Заказ</div>
       </div>
 
       <div class="main_panel_aside">
-        <Orders/>
+        <Orders :orders="orders" v-on:getCurrentOrder="getCurrentOrder"/>
       </div>
       
       <div class="main_panel_body">
-        <CurrentOrder/>   
+        <CurrentOrder :currentOrder="currentOrder"/>   
       </div>
     
     </div>
@@ -23,25 +23,120 @@
 <script>
 import Orders from "@/components/Orders.vue";
 import CurrentOrder from "@/components/CurrentOrder.vue";
-import Popup from "@/components/Popup.vue";
+import { HTTP } from '@/request/http-common'
 
 export default {
   name: "Main",
   components: {
     Orders,
     CurrentOrder,
-    Popup
   },
   data () {
     return {
-      order: 56
+      orders: [
+          {
+              id: 1,
+              order_status: 0,
+              order_cost: 12.5,
+              special_preferences: "",
+              cutlery: 1,
+              registration_time: "2018-12-30T22:20:32.170Z",
+              restaurant_arrival_time: "2018-12-30T22:49:15.110Z"
+          },
+          {
+              id: 3,
+              order_status: 2,
+              order_cost: "12.5",
+              special_preferences: "",
+              cutlery: 1,
+              registration_time: "2018-12-30T22:20:32.170Z",
+              restaurant_arrival_time: "2018-12-30T22:49:15.110Z"
+          },
+          {
+              id: 4,
+              order_status: 1,
+              order_cost: 12.5,
+              special_preferences: "",
+              cutlery: 1,
+              registration_time: "2018-12-30T22:20:32.170Z",
+              restaurant_arrival_time: "2018-12-30T22:49:15.110Z"
+          },
+          {
+              id: 5,
+              order_status: 2,
+              order_cost: 12.5,
+              special_preferences: "",
+              cutlery: 1,
+              registration_time: "2018-12-30T22:20:32.170Z",
+              restaurant_arrival_time: "2018-12-30T22:49:15.110Z"
+          },
+          {
+              id: 0,
+              order_status: 3,
+              order_cost: 12.5,
+              special_preferences: "",
+              cutlery: 1,
+              registration_time: "2018-12-30T22:20:32.170Z",
+              restaurant_arrival_time: "2018-12-30T22:49:15.110Z"
+          },
+      ],
+      currentOrder: {
+          id: 1,
+          order_status: 0,
+          order_cost: 12.5,
+          special_preferences: "",
+          cutlery: 1,
+          registration_time: "2018-12-30T22:20:32.170Z",
+          restaurant_arrival_time: "2018-12-30T22:49:15.110Z",
+          dishes: [
+              {
+                  price: 9.5,
+                  quantity: 1,
+                  name: "Нагетсы",
+                  size: "9 штук",
+                  options: [
+                      {
+                          name: "Дополнительный нагетс",
+                          price: 2,
+                          count: 1
+                      }
+                  ]
+              },
+              {
+                  price: 1,
+                  quantity: 1,
+                  name: "Картошка фри",
+                  size: "Большая",
+                  options: []
+              }
+          ]
+      },
+      date: 1,
     }
+  },
+  mounted(){
+    HTTP.get('/system/restaurant/orders')
+    .then(res => {
+      this.date = res.data
+    })
+    .catch(e => {
+      this.errors.push(e)
+    })
   },
   props: {
 
   },
   methods: {
-    
+    getCurrentOrder(id) {
+
+      HTTP.get(`/system/restaurant/order/${id}`)
+      .then(res => {
+        this.currentOrder = res.data
+      })
+      .catch(e => {
+        this.errors.push(e)
+      })
+    }
   }
 };
 </script>
@@ -75,7 +170,7 @@ export default {
       &_body {
         padding: 10px;
         flex: 3 0px;
-        background: #d8d8d8;
+        // background: #d8d8d8;
       }
     }
   }

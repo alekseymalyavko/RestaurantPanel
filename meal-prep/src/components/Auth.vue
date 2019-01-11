@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="autharisation">
     
     <div class="form">
       <h2 class="">Вход</h2>
@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import { HTTP } from '@/request/http-common'
+
 export default {
   name: "Auth",
   data () {
@@ -25,19 +27,39 @@ export default {
   props: {
 
   },
+  // mounted() {
+  //   axios
+  //     .get('https://api.coindesk.com/v1/bpi/currentprice.json')
+  //     .then(response => (console.log(response.data.bpi)));
+  // },
   methods: {
     autharization: function(e){
       e.preventDefault();
-      const login = this.login;
-      const password = this.password;
+       
+      HTTP.post('/restautant/manager/auth', {
+        body: { login:this.login, password:this.password }
+      })
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch(e => {
+        this.errors.push(e)
+      })
 
-      console.log(login, password)
+      this.$router.options.routes[1].meta.authorized = true;
+      this.$router.push("/main");
     }
   }
 };
 </script>
 
 <style scoped lang="less">
+  .autharisation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
   .form {
     display: block;
     margin: auto;

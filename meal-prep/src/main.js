@@ -3,7 +3,19 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-Vue.config.productionTip = false;
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+Vue.use(VueAxios, axios)
+
+
+// Vue.config.productionTip = false;
+router.beforeEach((to, from, next) => {
+  if(to.meta.authorized === false) {
+    next(from)
+  } else {
+    next()
+  }
+})
 
 new Vue({
   router,
