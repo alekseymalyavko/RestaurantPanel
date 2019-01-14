@@ -15,13 +15,14 @@
 
 <script>
 import { HTTP } from '@/request/http-common'
+import axios from 'axios'
 
 export default {
   name: "Auth",
   data () {
     return {
-      login: null,
-      password: null,
+      login: "SkachkoDK",
+      password: "87530952",
     }
   },
   props: {
@@ -35,10 +36,13 @@ export default {
   methods: {
     autharization: function(e){
       e.preventDefault();
-       
-      HTTP.post('/restautant/manager/auth', {
-        body: { login:this.login, password:this.password }
-      })
+      
+      const body = { login: this.login, password: this.password }
+      const str = JSON.stringify(body);
+
+      console.log(str)
+      
+      HTTP.post('/restautant/manager/auth', str)
       .then(res => {
         console.log(res.data)
       })
