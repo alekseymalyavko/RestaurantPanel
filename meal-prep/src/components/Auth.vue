@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { HTTP } from '@/request/http-common'
+import { AUTH } from '@/request/http-common'
 import axios from 'axios'
 
 export default {
@@ -28,23 +28,15 @@ export default {
   props: {
 
   },
-  // mounted() {
-  //   axios
-  //     .get('https://api.coindesk.com/v1/bpi/currentprice.json')
-  //     .then(response => (console.log(response.data.bpi)));
-  // },
   methods: {
     autharization: function(e){
       e.preventDefault();
       
-      const body = { login: this.login, password: this.password }
-      const str = JSON.stringify(body);
+      const body = JSON.stringify({ login: this.login, password: this.password })
 
-      console.log(str)
-      
-      HTTP.post('/restautant/manager/auth', str)
+      AUTH.post('/restautant/manager/auth', body)
       .then(res => {
-        console.log(res.data)
+        document.cookie = `Authorization=${res.data.token};expires=86400 `;
       })
       .catch(e => {
         this.errors.push(e)

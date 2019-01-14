@@ -4,7 +4,7 @@
 
       <form name="popup" @submit="sendOrder">
         <h2>Принять заказ</h2><span class="close_button" @click="$emit('close')">×</span>
-        <p>Клиент ожидает доставку заказа в 16:56</p>
+        <p>Клиент ожидает доставку заказа в {{arrivalTime}}</p>
         
         <div class="calculator">
           <div class="calculator_block">
@@ -21,7 +21,7 @@
           <div class="calculator_block_main">
             <span>Доставка </span>
             <span><strong>в течении {{minutes}} мин</strong></span>
-            <span>в 15:25</span>
+            <span>в {{arrivalTimeWithDelivery}}</span>
           </div>
         </div>
 
@@ -36,6 +36,7 @@
 
 <script>
 import { HTTP } from '@/request/http-common'
+import moment from 'moment'
 
 export default {
   name: "Popup",
@@ -43,11 +44,21 @@ export default {
     return {
       orderId: this.currentOrder.id,
       minutes: 15,
+      arrivalTime: moment(this.currentOrder.restaurant_arrival_time).format('LT'),
+      arrivalTimeWithDelivery: moment(this.currentOrder.restaurant_arrival_time).add(this.minutes,'m').format('LT'),
     }
   },
   props: {
     currentOrder: Object,
     openPopup: Boolean,
+  },
+  watch: {
+    minutes: function(val){
+      this.arrivalTimeWithDelivery = moment(this.currentOrder.restaurant_arrival_time).add(this.minutes,'m').format('LT');
+    }
+  },
+  mounted(){
+    
   },
   methods: {
     sendOrder: function(e) {

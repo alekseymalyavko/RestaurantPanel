@@ -9,7 +9,7 @@
       </div>
 
       <div class="current_order_panel_header_time">
-        Ожидается доставка {{new Date(currentOrder.restaurant_arrival_time).toLocaleDateString()}}
+        Ожидается доставка {{arrivalTime}}
       </div>
 
       <div class="acceptButton" @click="handlePopup" v-if="currentOrder.order_status === 0">
@@ -38,8 +38,8 @@
       </div>
       
       <div class="current_order_courier">
-        <div class="current_order_courier_name">Дмитрий</div>
-        <div class="current_order_courier_name">+7(916)9510800</div>
+        <div class="current_order_courier_name">{{currentOrder.courier_name}}</div>
+        <div class="current_order_courier_name">{{currentOrder.courier_phone}}</div>
       </div>
 
     </div>
@@ -52,6 +52,8 @@
 
 <script>
 import Popup from "@/components/Popup.vue"
+import moment from 'moment'
+
 export default {
   name: "CurrentOrder",
   components: {
@@ -62,6 +64,7 @@ export default {
   },
   data () {
     return {
+      arrivalTime: moment(this.currentOrder.restaurant_arrival_time).format('LT'),
       openPopup: false,
     }
   },
