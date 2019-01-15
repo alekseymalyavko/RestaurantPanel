@@ -1,8 +1,9 @@
 <template>
   <div class="autharisation">
     
-    <div class="form">
+    <div class="form" :class="{ warning: isError }">
       <h2 class="">Вход</h2>
+      <p class="warning_message" v-if="isError">Неверные данные</p>
       <form name="auth_form" @submit="autharization">
         <input type="text" placeholder="Логин" name="login" v-model="login" required>
         <input type="password" placeholder="Пароль" name="password" v-model="password" required>
@@ -16,17 +17,17 @@
 <script>
 import { AUTH } from '@/request/http-common'
 import axios from 'axios'
+import { setCookie } from '@/request/cookie.js'
+
 
 export default {
   name: "Auth",
   data () {
     return {
+      isError: false,
       login: "SkachkoDK",
       password: "87530952",
     }
-  },
-  props: {
-
   },
   methods: {
     autharization: function(e){
@@ -36,14 +37,18 @@ export default {
 
       AUTH.post('/restautant/manager/auth', body)
       .then(res => {
-        document.cookie = `Authorization=${res.data.token};expires=86400 `;
+        if(res.data) {
+          setCookie('Authorization', res.data.token, 'expires=86400')
+          this.$router.options.routes[1].meta.authorized = true;
+          this.$router.push("/main");
+        }
       })
       .catch(e => {
-        this.errors.push(e)
+        this.isError = true;
+        console.log(e)
       })
 
-      this.$router.options.routes[1].meta.authorized = true;
-      this.$router.push("/main");
+      
     }
   }
 };
@@ -65,5 +70,13 @@ export default {
     padding: 10px;
     border-radius: 3px;
     border: 1px solid #b9b9b9;
+
+    &.warning {
+      border: 1px solid red;
+    }
+
+    .warning_message {
+      color: red;
+    }
   }
 </style>

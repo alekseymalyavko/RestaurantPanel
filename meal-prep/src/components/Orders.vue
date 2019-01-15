@@ -2,8 +2,8 @@
   <div class="orders_panel">
     <div>
       
-      <div class="orders_type" @click="showlist">
-        <div class="orders_type_header">Новый <span>{{ newOrders.length }}</span></div>
+      <div class="orders_type" >
+        <div class="orders_type_header" @click="showlist">Новый <span>{{ newOrders.length }}</span></div>
         
         <div class="orders_type_list">
           <div :key="order.id" v-for="order in newOrders">
@@ -17,8 +17,8 @@
 
       </div>
       
-      <div class="orders_type" @click="showlist">
-        <div class="orders_type_header">Принят <span>{{ acceptedOrders.length }}</span></div>
+      <div class="orders_type">
+        <div class="orders_type_header" @click="showlist">Принят <span>{{ acceptedOrders.length }}</span></div>
         
         <div class="orders_type_list">
           <div :key="order.id" v-for="order in acceptedOrders">
@@ -32,8 +32,8 @@
 
       </div>
 
-      <div class="orders_type" @click="showlist">
-        <div class="orders_type_header">Готов к выдаче <span>{{ readyOrders.length }}</span></div>
+      <div class="orders_type">
+        <div class="orders_type_header" @click="showlist">Готов к выдаче <span>{{ readyOrders.length }}</span></div>
         
         <div class="orders_type_list">
           <div :key="order.id" v-for="order in readyOrders">
@@ -73,7 +73,8 @@ export default {
   },
   methods: {
     showlist: (e) => {
-      e.target.classList.toggle("active")
+      // console.log(e)
+      e.target.parentElement.classList.toggle("active")
     },
     openOrder: (e) => {
       console.log(e)
@@ -94,7 +95,7 @@ export default {
       justify-content: space-between;
       padding: 15px 5px;
       background: white;
-      pointer-events: none;
+      // pointer-events: none;
       padding-left: 30px;
       position: relative;
 

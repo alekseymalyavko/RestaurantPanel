@@ -7,11 +7,11 @@
       </div>
 
       <div class="main_panel_aside">
-        <Orders :orders="orders" v-on:getCurrentOrder="getCurrentOrder"/>
+        <Orders :orders="orders" :key="Math.random()" v-on:getCurrentOrder="getCurrentOrder"/>
       </div>
       
       <div class="main_panel_body">
-        <CurrentOrder :currentOrder="currentOrder" /> 
+        <CurrentOrder :currentOrder="currentOrder" :key="Math.random()" v-show="currentOrder.id"/> 
         <!-- <div class="loading_wrapper" v-if="!currentOrder.id"><div class="loading"></div></div>-->
       </div>
     
@@ -25,6 +25,9 @@
 import Orders from "@/components/Orders.vue";
 import CurrentOrder from "@/components/CurrentOrder.vue";
 import { HTTP } from '@/request/http-common'
+import { exit } from '@/request/exit';
+import { deleteCookie } from '@/request/cookie';
+
 
 export default {
   name: "Main",
@@ -35,62 +38,27 @@ export default {
   data () {
     return {
       orders: [],
-      currentOrder: {
-    "id": 1,
-    "order_status": 0,
-    "order_cost": "12.5",
-    "special_preferences": "",
-    "cutlery": 1,
-    "courier_name":"Денис",
-    "courier_surname":"Киррилович",
-    "courier_lastname":"Скачко",
-    "courier_phone":"+375293451287",
-    "registration_time": "2018-12-30T22:20:32.170Z",
-    "restaurant_arrival_time": "2018-12-30T22:49:15.110Z",
-    "dishes": [
-        {
-            "price": "9.5",
-            "quantity": 1,
-            "name": "Нагетсы",
-            "size": "9 штук",
-            "options": [
-                {
-                    "name": "Дополнительный нагетс",
-                    "price": "2",
-                    "count": "1"
-                }
-            ]
-        },
-        {
-            "price": "1",
-            "quantity": 1,
-            "name": "Картошка фри",
-            "size": "Большая",
-            "options": []
-        }
-    ]
-},
+      currentOrder: {},
     }
   },
-  mounted(){
+  created() {
     HTTP.get('/system/restaurant/orders')
     .then(res => {
-      console.log(res.data)
+      this.orders = res.data
     })
     .catch(e => {
-      this.errors.push(e)
+      exit(e)
     })
   },
   methods: {
     getCurrentOrder(id) {
-
+      console.log(id)
       HTTP.get(`/system/restaurant/order/${id}`)
       .then(res => {
-        console.log(res.data)
         this.currentOrder = res.data
       })
       .catch(e => {
-        this.errors.push(e)
+        exit(e)
       })
     }
   }
@@ -120,7 +88,8 @@ export default {
       &_aside {
         background: #eaeaea;
         flex: 1;
-        height: 80vh
+        height: calc(100vh - 45px);
+        overflow: auto;
       }
 
       &_body {

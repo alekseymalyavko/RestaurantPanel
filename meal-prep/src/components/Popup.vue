@@ -8,11 +8,11 @@
         
         <div class="calculator">
           <div class="calculator_block">
-            <div class="calculator_sign" @click="minutes -= 5">
+            <div class="calculator_sign" @click="sub">
               <span>-</span>
               5 мин
             </div>
-            <div class="calculator_sign" @click="minutes += 5">
+            <div class="calculator_sign" @click="add">
               <span>+</span>
               5 мин
             </div>
@@ -61,36 +61,38 @@ export default {
     
   },
   methods: {
+    add: function(e) {
+      this.minutes += 5
+    },
+    sub: function(e) {
+      this.minutes > 5 ? this.minutes -= 5 : false
+    },
     sendOrder: function(e) {
       e.preventDefault();
-      console.log(this.orderId, this.minutes)
-      
+      const body = JSON.stringify({ minutes:this.minutes })
       //для готовки
-      HTTP.post(`/system/restaurant/order/${this.orderId}/readylTime`, {
-        body: { minutes:this.minutes }
-      })
+      HTTP.post(`/system/restaurant/order/${this.orderId}/readylTime`, body)
       .then(res => {
-        console.log(res.data)
+        alert("Отправленно");
+        console.log(res)
       })
       .catch(e => {
         this.errors.push(e)
       })
 
-      //для доставки
-      HTTP.post(`/system/restaurant/order/${this.orderId}/readyToDelivery`, {
-        body: { minutes:this.minutes }
-      })
-      .then(res => {
-        console.log(res.data)
-      })
-      .catch(e => {
-        this.errors.push(e)
-      })
-
-      alert("Отправленно");
       this.$emit('close');
+      // //для доставки
+      // HTTP.post(`/system/restaurant/order/${this.orderId}/readyToDelivery`, body)
+      // .then(res => {
+      //   console.log(res)
+      // })
+      // .catch(e => {
+      //   this.errors.push(e)
+      // })
+
     }
-  }
+  },
+  
 };
 </script>
 

@@ -8,12 +8,20 @@
         <span v-if="currentOrder.order_status === 3">Готов к выдаче</span>
       </div>
 
-      <div class="current_order_panel_header_time">
+      <div class="current_order_panel_header_time" v-if="currentOrder.order_status > 0">
         Ожидается доставка {{arrivalTime}}
       </div>
 
       <div class="acceptButton" @click="handlePopup" v-if="currentOrder.order_status === 0">
         Принять заказ
+      </div>
+
+      <div class="acceptButton" @click="readyToDelivery" v-if="currentOrder.order_status === 1 || currentOrder.order_status === 2">
+        Готов к выдаче
+      </div>
+
+      <div class="acceptButton" @click="giveToDelivery" v-if="currentOrder.order_status === 3">
+        Передать курьеру
       </div>
     
     </div>
@@ -74,6 +82,19 @@ export default {
   methods: {
     handlePopup: function(e) {
       this.openPopup = true
+    },
+    readyToDelivery: function(e) {
+      console.log(this.currentOrder.id)
+      // HTTP.post(`/system/restaurant/order/${this.orderId}/readyToDelivery`, body)
+      // .then(res => {
+      //   console.log(res)
+      // })
+      // .catch(e => {
+      //   this.errors.push(e)
+      // })
+    },
+    giveToDelivery: function(e) {
+      console.log(this.currentOrder.id)
     }
   }
 };
