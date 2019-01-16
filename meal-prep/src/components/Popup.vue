@@ -70,25 +70,16 @@ export default {
     sendOrder: function(e) {
       e.preventDefault();
       const body = JSON.stringify({ minutes:this.minutes })
-      //для готовки
+
       HTTP.post(`/system/restaurant/order/${this.orderId}/readylTime`, body)
       .then(res => {
         alert("Отправленно");
-        console.log(res)
+        this.$store.dispatch("loadData");
+        this.$emit('close');
       })
       .catch(e => {
         this.errors.push(e)
       })
-
-      this.$emit('close');
-      // //для доставки
-      // HTTP.post(`/system/restaurant/order/${this.orderId}/readyToDelivery`, body)
-      // .then(res => {
-      //   console.log(res)
-      // })
-      // .catch(e => {
-      //   this.errors.push(e)
-      // })
 
     }
   },

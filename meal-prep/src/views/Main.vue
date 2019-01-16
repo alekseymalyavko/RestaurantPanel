@@ -3,15 +3,15 @@
     <div class="main_panel">
       <div class="main_panel_header">
         <div>Обработка заказа</div> 
-        <div>Заказ</div>
+        <div>Заказ {{currentOrder.id}}</div>
       </div>
 
       <div class="main_panel_aside">
-        <Orders :orders="orders" :key="Math.random()" v-on:getCurrentOrder="getCurrentOrder"/>
+        <Orders :orders="orders" :key="Math.random()"/>
       </div>
       
       <div class="main_panel_body">
-        <CurrentOrder :currentOrder="currentOrder" :key="Math.random()" v-show="currentOrder.id"/> 
+        <CurrentOrder :currentOrder="currentOrder" v-show="currentOrder.id"/> 
         <!-- <div class="loading_wrapper" v-if="!currentOrder.id"><div class="loading"></div></div>-->
       </div>
     
@@ -27,6 +27,7 @@ import CurrentOrder from "@/components/CurrentOrder.vue";
 import { HTTP } from '@/request/http-common'
 import { exit } from '@/request/exit';
 import { deleteCookie } from '@/request/cookie';
+import { mapState, mapGetters } from 'vuex';
 
 
 export default {
@@ -35,38 +36,21 @@ export default {
     Orders,
     CurrentOrder,
   },
-  data () {
-    return {
-      orders: [],
-      currentOrder: {},
-    }
+  computed: {
+    ...mapState(['orders', 'currentOrder']),
   },
   created() {
-    HTTP.get('/system/restaurant/orders')
-    .then(res => {
-      this.orders = res.data
-    })
-    .catch(e => {
-      exit(e)
-    })
+    this.$store.dispatch("loadData");
   },
-  methods: {
-    getCurrentOrder(id) {
-      console.log(id)
-      HTTP.get(`/system/restaurant/order/${id}`)
-      .then(res => {
-        this.currentOrder = res.data
-      })
-      .catch(e => {
-        exit(e)
-      })
-    }
-  }
 };
 </script>
 
 <style scoped lang="less">
   .main {
+    // font-family: 'Montserrat';
+    font-weight: 500;
+    line-height: normal;
+    font-size: 18px;
 
     &_panel {
       display:flex;
@@ -77,26 +61,29 @@ export default {
       }
       
       &_header {
-        background: #89c300;
+        background: #E5E7E8;
         display: flex;
-        justify-content: space-between;
+        // justify-content: space-between;
         align-items: center;
-        height: 45px;
+        height: 65px;
         padding: 0 15px;
+        border: 1px solid rgba(128, 128, 128, 0.2);
+
+        & > div:first-child {
+          margin-right: 45%;
+        }
       }
 
       &_aside {
         background: #eaeaea;
         flex: 1;
-        height: calc(100vh - 45px);
+        height: calc(100vh - 65px);
         overflow: auto;
       }
 
       &_body {
-        padding: 10px;
         flex: 3 0px;
         position:relative;
-        // background: #d8d8d8;
       }
     }
   }

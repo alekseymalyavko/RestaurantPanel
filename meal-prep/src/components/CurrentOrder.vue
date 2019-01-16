@@ -2,52 +2,83 @@
   <div class="current_order_panel">
     <div class="current_order_panel_header">
 
-      <div class="current_order_panel_header_type">
-        <span v-if="currentOrder.order_status === 0" >Новый</span>
-        <span v-if="currentOrder.order_status === 1 || currentOrder.order_status === 2">Принят</span>
-        <span v-if="currentOrder.order_status === 3">Готов к выдаче</span>
+      <div class="current_order_panel_header_first">
+        <div class="current_order_panel_header_type">
+          <span v-if="currentOrder.order_status === 0" class="new">Новый</span>
+          <span v-if="currentOrder.order_status === 1 || currentOrder.order_status === 2" class="checked">Принят</span>
+          <span v-if="currentOrder.order_status === 3" class="ready">Готов к выдаче</span>
+        </div>
+
+        <div class="current_order_panel_header_time" v-if="currentOrder.order_status === 0">
+          Ожидается доставка до {{arrivalTime}}
+        </div>
+        <div class="current_order_panel_header_time" v-if="currentOrder.order_status > 0">
+          Доставка до {{arrivalTime}}
+        </div>
       </div>
 
-      <div class="current_order_panel_header_time" v-if="currentOrder.order_status > 0">
-        Ожидается доставка {{arrivalTime}}
-      </div>
-
-      <div class="acceptButton" @click="handlePopup" v-if="currentOrder.order_status === 0">
+      <div class="acceptButton new" @click="handlePopup" v-if="currentOrder.order_status === 0">
         Принять заказ
       </div>
-
-      <div class="acceptButton" @click="readyToDelivery" v-if="currentOrder.order_status === 1 || currentOrder.order_status === 2">
+      <div class="acceptButton checked" @click="readyToDelivery" v-if="currentOrder.order_status === 1 || currentOrder.order_status === 2">
         Готов к выдаче
       </div>
-
-      <div class="acceptButton" @click="giveToDelivery" v-if="currentOrder.order_status === 3">
+      <div class="acceptButton ready" @click="giveToDelivery" v-if="currentOrder.order_status === 3">
         Передать курьеру
       </div>
+      
     
     </div>
     
     <div class="current_order_table">
 
       <div class="current_order_info">
-        <div class="current_order_info_list" :key="dish.id" v-for="dish in currentOrder.dishes">
+
+        <div class="current_order_info_list">
           <div class="current_order_info_list_dish">
-            <span>{{dish.quantity}} x {{dish.name}} ({{dish.size}})</span> <span>{{dish.price}} руб.</span>
+
+            <div class="current_order_info_list_dish_main">
+              <span>4 x Чизбургер </span> <span>60.00 BYN</span>
+            </div> 
+            <div class="current_order_info_list_dish_secondary">
+              <span>1 x Гамбургер</span>
+              <span>1 x Котлетка</span>
+            </div>
+
           </div>
         </div>
+
+        <div class="current_order_info_list" :key="dish.id" v-for="dish in currentOrder.dishes">
+          <div class="current_order_info_list_dish">
+            <span>{{dish.quantity}} x {{dish.name}} ({{dish.size}})</span> <span>{{dish.price}} BYN</span>
+          </div>
+        </div>
+
         <div class="current_order_info_total">
           <div class="current_order_info_total_calc">
-            <p>Промежуточная сумма <span>{{currentOrder.order_cost}}  руб.</span></p>
-            <p>Стоимость доставки <span>0.00 руб.</span></p>  
+            <p>Промежуточная сумма <span>{{currentOrder.order_cost}}  BYN</span></p>
+            <p>Стоимость доставки <span>0.00 BYN</span></p>  
           </div>
           <div class="current_order_info_total_price">
-            <p>Итого <span>{{currentOrder.order_cost}} руб.</span></p>  
+            <p>ИТОГО <span>{{currentOrder.order_cost}} BYN</span></p>
           </div>
+        </div>
+
+        <div class="current_order_info_more">
+          <p>ПРИМЕЧАНИЕ К ЗАКАЗУ:</p>
+          <ul>
+            <li>Посолить картошку</li>
+            <li>Кокак колу купить и покрасить</li>
+          </ul>
         </div>
       </div>
       
       <div class="current_order_courier">
+        <p class="current_order_courier_info">ИНФОРМАЦИЯ О КУРЬЕРЕ:</p>
         <div class="current_order_courier_name">{{currentOrder.courier_name}}</div>
         <div class="current_order_courier_name">{{currentOrder.courier_phone}}</div>
+        <p class="current_order_courier_info_delivery">ИНСТРУКЦИИ ПО ДОСТАВКЕ:</p>
+        <p class="current_order_courier_info_people">Количество персон: 4</p>
       </div>
 
     </div>
@@ -84,14 +115,14 @@ export default {
       this.openPopup = true
     },
     readyToDelivery: function(e) {
-      console.log(this.currentOrder.id)
-      // HTTP.post(`/system/restaurant/order/${this.orderId}/readyToDelivery`, body)
-      // .then(res => {
-      //   console.log(res)
-      // })
-      // .catch(e => {
-      //   this.errors.push(e)
-      // })
+
+      HTTP.post(`/system/restaurant/order/${this.currentOrder.id}/readyToDelivery`, body)
+      .then(res => {
+        this.$store.dispatch("loadData");
+      })
+      .catch(e => {
+        this.errors.push(e)
+      })
     },
     giveToDelivery: function(e) {
       console.log(this.currentOrder.id)
@@ -108,13 +139,30 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding-bottom: 15px;
+        padding: 15px 15px 15px 45px;
+        border-bottom: 1px solid #DCDDDE;
+        
+        &_first {
+          display: flex;
+          align-items: center;
 
+          & > div:first-child {
+            margin-right: 18px;
+          }
+        }
+        &_time {
+          font-size: 16px;
+        }
         &_type {
-          padding: 3px 10px;
-          background: #0070ff;
-          border-radius: 15px;
-          color: #fff;
+          span {
+            color: #fff;
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+            font-size: 16px;
+          }
         }
       }
     }
@@ -126,13 +174,30 @@ export default {
       }
       .current_order_courier {
         width: 30%;
-        padding: 0 20px;
+        padding: 0px 16px;
         text-align: left;
         
+        &_info {
+          font-size: 14px;
+          font-style: italic;
+
+          &_delivery {
+            margin-top: 24px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-style: italic;
+          }
+
+          &_people {
+            font-size: 14px;
+            margin-top: 8px;
+          }
+        }
+
         & > div {
           font-weight: 600;
-          font-size: 18px;
-          margin: 10px 0;
+          font-size: 24px;
+          margin: 3px 0;
         }
       }
     }
@@ -140,47 +205,97 @@ export default {
       // padding: 20px;
       text-align: left;
       &_list {
-        padding: 5px 10px;
-        border-bottom: 1px solid grey;
+        // padding: 5px 10px;
 
         &_dish {
-          display: flex;
-          justify-content: space-between;
-          font-weight: 600;
+          font-weight: 500;
+          font-size: 16px;
+          padding: 16px;
+          border-bottom: 1px solid #DCDDDE;
+
+          &_main {
+            display: flex;
+            justify-content: space-between;
+          }
+          &_secondary{
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+            color: #808080;
+            margin-top: 8px;   
+            margin-left: 28px;
+          }
+
         }
       }
       &_total {
-        padding-top: 20px;
+        padding-top: 16px;
 
         p {
-          margin: 5px 0;
+          margin: 8px 0;
           display: flex;
           justify-content: space-between;
           padding: 0 10px;
+          font-size: 16px;
         }
 
         &_calc {
           font-size: 14px;
+
+          & p:first-child {
+            font-weight: 600;
+          }
+
+          & p:last-child {
+            color: #808080;
+          }
         }
         &_price {
-          padding: 10px 0;
-          background: #eaeaea;
-          border-radius:3px;
+          margin-top: 5px;
+          padding: 5px 0px;
+          background: #1E282C;
           font-weight: 600;
+          font-size: 18px;
+          color: #fff;
         }
+      }
+      &_more {
+          padding: 0 10px;
+          & > p {
+            font-weight: 600;
+            font-style: italic;
+            font-size: 14px;
+            margin-bottom: 8px;
+          }
+          & > ul {
+            margin: 0;
+            font-weight: 500;
+            font-size: 14px;
+            padding-left: 20px;
+          }
       }
     }
   }
   .acceptButton {
-    padding: 10px;
-    width: 120px;
-    height: 30px;
-    background: orange;
+    padding: 14px 65px;
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: 2px;
+    font-size: 18px;
   }
+
+  .new {
+    background: #39E27F;
+  }
+  .checked {
+    background: #1FA6E0;
+  }
+  .ready {
+    background: #FC6621;
+  }
+  
   
 </style>
