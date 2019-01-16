@@ -5,26 +5,16 @@
       <div class="orders_type" >
         <div class="orders_type_header">Новый <span>{{ newOrders.length }}</span></div>
         
-        <!-- <div class="orders_type_list"> -->
-          <!-- <div :key="order.id" v-for="order in newOrders"> -->
-            <!-- <div class="order_info" @click="getCurrentOrder(order.id)">
-              <span class="order_info_name">Алексей <span class="order_info_name_num">(№ 3)</span></span>
-              <span class="order_info_time"><span>Ожидается доставка до 16:20</span> <span>15:20</span></span>
-              <span class="order_info_cost">110.00 BYN</span>
-            </div> -->
-          <!-- </div> -->
-          <!-- <div class="order_info_empty">
-            Нет новых заказов
-          </div>
-        </div> -->
-
         <div class="orders_type_list">
           <div :key="order.id" v-for="order in newOrders">
             <div class="order_info" @click="getCurrentOrder(order.id)">
-              <span>Номер: {{order.id}}</span>
-              <span>Стоимость: {{order.order_cost}}</span>
-              <span>Сделан заказ: {{new Date(order.registration_time).toLocaleDateString()}}</span>
+              <span class="order_info_name">{{order.courier_name}} <span class="order_info_name_num">(№ {{order.id}})</span></span>
+              <span class="order_info_time"><span>Ожидается доставка до {{convertTime(order.registration_time)}}</span> <span>{{convertTime(order.restaurant_arrival_time)}}</span></span>
+              <span class="order_info_cost">{{order.order_cost}} BYN</span>
             </div>
+          </div>
+          <div class="order_info_empty" v-if="!newOrders[0]">
+            Нет новых заказов
           </div>
         </div>
 
@@ -36,10 +26,13 @@
         <div class="orders_type_list">
           <div :key="order.id" v-for="order in acceptedOrders">
             <div class="order_info" @click="getCurrentOrder(order.id)">
-              <span>Номер: {{order.id}}</span>
-              <span>Стоимость: {{order.order_cost}}</span>
-              <span>Сделан заказ: {{new Date(order.registration_time).toLocaleDateString()}}</span>
+              <span class="order_info_name">{{order.courier_name}} <span class="order_info_name_num">(№ {{order.id}})</span></span>
+              <span class="order_info_time"><span>Доставка до {{convertTime(order.registration_time)}}</span> <span>{{convertTime(order.restaurant_arrival_time)}}</span></span>
+              <span class="order_info_cost">{{order.order_cost}} BYN</span>
             </div>
+          </div>
+          <div class="order_info_empty" v-if="!acceptedOrders[0]">
+            Нет принятых заказов
           </div>
         </div>
 
@@ -51,10 +44,13 @@
         <div class="orders_type_list">
           <div :key="order.id" v-for="order in readyOrders">
             <div class="order_info" @click="getCurrentOrder(order.id)">
-              <span>Номер: {{order.id}}</span>
-              <span>Стоимость: {{order.order_cost}}</span>
-              <span>Сделан заказ: {{new Date(order.registration_time).toLocaleDateString()}}</span>
+              <span class="order_info_name">{{order.courier_name}} <span class="order_info_name_num">(№ {{order.id}})</span></span>
+              <span class="order_info_time"><span>Доставка до {{convertTime(order.registration_time)}}</span> <span>{{convertTime(order.restaurant_arrival_time)}}</span></span>
+              <span class="order_info_cost">{{order.order_cost}} BYN</span>
             </div>
+          </div>
+          <div class="order_info_empty" v-if="!readyOrders[0]">
+            Нет готовых заказов
           </div>
         </div>
 
@@ -67,6 +63,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: "Orders",
   data () {
@@ -94,6 +92,9 @@ export default {
     },
     getCurrentOrder(id) {
       this.$store.dispatch("getCurrentOrder", id);
+    },
+    convertTime(time){
+      return moment(time).format('LT')
     }
   }
 };
@@ -134,6 +135,10 @@ export default {
     align-items: start;
     padding: 10px 5px;
     font-size: 14px;
+
+    &:hover {
+      background: #39E27F;
+    }
 
     &_name {
       font-weight: 600;

@@ -47,10 +47,6 @@ export default {
 
 <style scoped lang="less">
   .main {
-    // font-family: 'Montserrat';
-    font-weight: 500;
-    line-height: normal;
-    font-size: 18px;
 
     &_panel {
       display:flex;
@@ -79,6 +75,7 @@ export default {
         flex: 1;
         height: calc(100vh - 65px);
         overflow: auto;
+        min-width: 220px;
       }
 
       &_body {

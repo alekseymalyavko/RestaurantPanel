@@ -39,13 +39,13 @@ export default {
       .then(res => {
         if(res.data) {
           setCookie('Authorization', res.data.token, 'expires=86400')
+          
           this.$router.options.routes[1].meta.authorized = true;
           this.$router.push("/main");
         }
       })
       .catch(e => {
         this.isError = true;
-        console.log(e)
       })
 
       

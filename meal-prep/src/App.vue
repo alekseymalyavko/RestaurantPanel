@@ -7,6 +7,7 @@
 <style lang="less">
   body {
     height: 100vh;
+    overflow: hidden;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -16,7 +17,10 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #2c3e50;
+    color: #1E282C;
+    font-weight: 500;
+    line-height: normal;
+    font-size: 18px;
   }
   #nav {
     padding: 30px;
@@ -47,9 +51,10 @@
       &[type="submit"]{
         width: 200px;
         height: 45px;
-        background: #4d90f5;
+        background: #39E27F;
         cursor: pointer;
         margin-top: 20px;
+        border-radius: 2px;
         color: #fff;
         font-weight: 600;
         border:none;

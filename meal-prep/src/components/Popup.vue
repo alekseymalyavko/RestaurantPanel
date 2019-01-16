@@ -3,8 +3,8 @@
     <div class="form">
 
       <form name="popup" @submit="sendOrder">
-        <h2>Принять заказ</h2><span class="close_button" @click="$emit('close')">×</span>
-        <p>Клиент ожидает доставку заказа в {{arrivalTime}}</p>
+        <span class="close_button" @click="$emit('close')">×</span>
+        <h2>Принять заказ</h2>
         
         <div class="calculator">
           <div class="calculator_block">
@@ -19,15 +19,15 @@
           </div>
 
           <div class="calculator_block_main">
-            <span>Доставка </span>
-            <span><strong>в течении {{minutes}} мин</strong></span>
+            <span>Курьер прибудет</span>
+            <span><strong>через {{minutes}} мин</strong></span>
             <span>в {{arrivalTimeWithDelivery}}</span>
           </div>
         </div>
 
         <input type="number" hidden name="orderId" v-model="orderId">
         <input type="number" hidden name="minutes" v-model="minutes">
-        <input type="submit" value="Отправить">
+        <input type="submit" value="Подтвердить">
       </form>
     </div>
 
@@ -73,12 +73,11 @@ export default {
 
       HTTP.post(`/system/restaurant/order/${this.orderId}/readylTime`, body)
       .then(res => {
-        alert("Отправленно");
         this.$store.dispatch("loadData");
         this.$emit('close');
       })
       .catch(e => {
-        this.errors.push(e)
+        this.$router.push("/");
       })
 
     }
@@ -108,21 +107,31 @@ export default {
     margin: auto;
     width: 400px;
     min-height: 200px;
-    background: #ececec;
+    background: #F7F7F7;
     padding: 10px;
     border-radius: 3px;
     border: 1px solid #b9b9b9;
     position: relative;
+    padding-top: 50px;
+
+    h2 {
+      font-size: 18px;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #E5E6E8;
+    }
   }
   .calculator {
     position: relative;
     padding: 40px 0;
 
     &_block {
+      background: #D6D8D9;
+      border-radius: 2px ;
+
       width: 350px;
-      background: grey;
-      border-radius: 2px;
-      // height: 40px;
       padding: 10px;
       display: flex;
       justify-content: space-between;
@@ -134,22 +143,22 @@ export default {
         flex-direction: column;
         align-items: center;
         cursor: pointer;
+        font-size: 12px;
 
         & span {
-          font-size: 25px;
+          font-size: 40px;
           font-weight: 600;
         }
       }
 
       &_main {
-        width: 135px;
-        background: #fff;
+        background: #E5E6E8;
+        border-radius: 2px;
+        width: 230px;
         position: absolute;
-        top: 17px;
-        left: 26%;
-        height: 70px;
-        padding: 20px;
-        border: 1px solid grey;
+        top: 22px;
+        left: 16%;
+        padding: 20px 10px;
         display: flex;
         flex-direction: column;
 
@@ -167,5 +176,6 @@ export default {
     font-size: 40px;
     padding: 5px;
     cursor: pointer;
+    z-index: 99;
   }
 </style>

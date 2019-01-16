@@ -35,7 +35,7 @@ export default new Vuex.Store({
         commit('updateOrders', res.data)
       })
       .catch(e => {
-        this.errors.push(e)
+        this.$router.push("/");
       })
     },
 
@@ -45,7 +45,7 @@ export default new Vuex.Store({
         commit('updateCurrentOrder', res.data)
       })
       .catch(e => {
-        exit(e)
+        this.$router.push("/");
       })
     }
   }

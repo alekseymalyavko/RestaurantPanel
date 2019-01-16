@@ -34,23 +34,16 @@
 
       <div class="current_order_info">
 
-        <div class="current_order_info_list">
+        <div class="current_order_info_list" :key="dish.id" v-for="dish in currentOrder.dishes">
           <div class="current_order_info_list_dish">
 
             <div class="current_order_info_list_dish_main">
-              <span>4 x Чизбургер </span> <span>60.00 BYN</span>
+              <span>{{dish.quantity}} x {{dish.name}} </span> <span>{{dish.price}} BYN</span>
             </div> 
-            <div class="current_order_info_list_dish_secondary">
-              <span>1 x Гамбургер</span>
-              <span>1 x Котлетка</span>
+            <div class="current_order_info_list_dish_secondary" v-for="option in dish.options">
+              <span>{{option.count}} x {{option.name}} </span>
             </div>
 
-          </div>
-        </div>
-
-        <div class="current_order_info_list" :key="dish.id" v-for="dish in currentOrder.dishes">
-          <div class="current_order_info_list_dish">
-            <span>{{dish.quantity}} x {{dish.name}} ({{dish.size}})</span> <span>{{dish.price}} BYN</span>
           </div>
         </div>
 
@@ -67,8 +60,8 @@
         <div class="current_order_info_more">
           <p>ПРИМЕЧАНИЕ К ЗАКАЗУ:</p>
           <ul>
-            <li>Посолить картошку</li>
-            <li>Кокак колу купить и покрасить</li>
+            <li v-if="currentOrder.special_preferences">{{currentOrder.special_preferences}}</li>
+            <li v-if="!currentOrder.special_preferences">Нет</li>
           </ul>
         </div>
       </div>
@@ -78,7 +71,7 @@
         <div class="current_order_courier_name">{{currentOrder.courier_name}}</div>
         <div class="current_order_courier_name">{{currentOrder.courier_phone}}</div>
         <p class="current_order_courier_info_delivery">ИНСТРУКЦИИ ПО ДОСТАВКЕ:</p>
-        <p class="current_order_courier_info_people">Количество персон: 4</p>
+        <p class="current_order_courier_info_people">Количество персон: {{currentOrder.cutlery}}</p>
       </div>
 
     </div>
@@ -92,6 +85,7 @@
 <script>
 import Popup from "@/components/Popup.vue"
 import moment from 'moment'
+import { HTTP } from '@/request/http-common'
 
 export default {
   name: "CurrentOrder",
@@ -115,17 +109,26 @@ export default {
       this.openPopup = true
     },
     readyToDelivery: function(e) {
+      const body = JSON.stringify({ minutes: this.minutes });
 
       HTTP.post(`/system/restaurant/order/${this.currentOrder.id}/readyToDelivery`, body)
       .then(res => {
         this.$store.dispatch("loadData");
       })
       .catch(e => {
-        this.errors.push(e)
+        this.$router.push("/");
       })
     },
     giveToDelivery: function(e) {
-      console.log(this.currentOrder.id)
+      const body = JSON.stringify({ minutes: this.minutes });
+
+      HTTP.post(`/system/restaurant/order/${this.currentOrder.id}/handed`, body)
+      .then(res => {
+        this.$store.dispatch("loadData");
+      })
+      .catch(e => {
+        this.$router.push("/");
+      })
     }
   }
 };
@@ -139,7 +142,8 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 15px 15px 15px 45px;
+        height: 65px;
+        padding: 0 15px;
         border-bottom: 1px solid #DCDDDE;
         
         &_first {
@@ -151,6 +155,7 @@ export default {
           }
         }
         &_time {
+          text-align: left;
           font-size: 16px;
         }
         &_type {
@@ -168,13 +173,17 @@ export default {
     }
     &_table {
       display:flex;
+      height: calc(100vh - 130px);
 
       .current_order_info {
         width: 70%;
+        overflow: auto;
+        padding-right: 15px;
+        padding-bottom: 30px;
       }
       .current_order_courier {
         width: 30%;
-        padding: 0px 16px;
+        padding: 0px 15px 0px 10px;
         text-align: left;
         
         &_info {
@@ -210,7 +219,7 @@ export default {
         &_dish {
           font-weight: 500;
           font-size: 16px;
-          padding: 16px;
+          padding: 10px 16px;
           border-bottom: 1px solid #DCDDDE;
 
           &_main {
@@ -277,7 +286,7 @@ export default {
     }
   }
   .acceptButton {
-    padding: 14px 65px;
+    padding: 14px 20px;
     color: #fff;
     display: flex;
     align-items: center;
