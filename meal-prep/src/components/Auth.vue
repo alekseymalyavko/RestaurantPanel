@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { AUTH } from '@/request/http-common'
+import { AUTH, HTTP } from '@/request/http-common'
 import axios from 'axios'
 import { setCookie } from '@/request/cookie.js'
 
@@ -38,8 +38,8 @@ export default {
       AUTH.post('/restautant/manager/auth', body)
       .then(res => {
         if(res.data) {
-          setCookie('Authorization', res.data.token, 'expires=86400')
-          
+          setCookie('Authorization', res.data.token, 'expires=86400');  
+          HTTP.defaults.headers['Authorization'] = `Bearer ${res.data.token}`;
           this.$router.options.routes[1].meta.authorized = true;
           this.$router.push("/main");
         }

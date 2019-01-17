@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { HTTP } from '@/request/http-common'
+import router from "./router";
 
 Vue.use(Vuex);
 
@@ -35,7 +36,8 @@ export default new Vuex.Store({
         commit('updateOrders', res.data)
       })
       .catch(e => {
-        this.$router.push("/");
+        console.log(e);
+        router.push("/");
       })
     },
 
@@ -45,7 +47,8 @@ export default new Vuex.Store({
         commit('updateCurrentOrder', res.data)
       })
       .catch(e => {
-        this.$router.push("/");
+        console.log(e);
+        router.push("/");
       })
     }
   }

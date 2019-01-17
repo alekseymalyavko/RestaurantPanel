@@ -40,7 +40,7 @@
             <div class="current_order_info_list_dish_main">
               <span>{{dish.quantity}} x {{dish.name}} </span> <span>{{dish.price}} BYN</span>
             </div> 
-            <div class="current_order_info_list_dish_secondary" v-for="option in dish.options">
+            <div class="current_order_info_list_dish_secondary" :key="option.id" v-for="option in dish.options">
               <span>{{option.count}} x {{option.name}} </span>
             </div>
 
@@ -116,6 +116,7 @@ export default {
         this.$store.dispatch("loadData");
       })
       .catch(e => {
+        console.log(e);
         this.$router.push("/");
       })
     },
@@ -127,6 +128,7 @@ export default {
         this.$store.dispatch("loadData");
       })
       .catch(e => {
+        console.log(e);
         this.$router.push("/");
       })
     }
