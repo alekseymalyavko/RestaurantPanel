@@ -69,9 +69,11 @@ export default {
     },
     sendOrder: function(e) {
       e.preventDefault();
+      
       const body = JSON.stringify({ minutes:this.minutes })
+      const currentOrder = this.currentOrder.id;
 
-      HTTP.post(`/system/restaurant/order/${this.orderId}/readylTime`, body)
+      HTTP.post(`/system/restaurant/order/${currentOrder}/readylTime`, body)
       .then(res => {
         this.$store.dispatch("loadData");
         this.$emit('close');

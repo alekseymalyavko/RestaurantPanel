@@ -6,7 +6,7 @@
         <div class="orders_type_header">Новый <span>{{ newOrders.length }}</span></div>
         
         <div class="orders_type_list">
-          <div :key="order.id" v-for="order in newOrders">
+          <div :key="order.id" v-for="order in newOrders" :class="{active: isActive(order.id)}">
             <div class="order_info" @click="getCurrentOrder(order.id)">
               <span class="order_info_name">{{order.courier_name}} <span class="order_info_name_num">(№ {{order.id}})</span></span>
               <span class="order_info_time"><span>Ожидается доставка до {{convertTime(order.registration_time)}}</span> <span>{{convertTime(order.restaurant_arrival_time)}}</span></span>
@@ -24,7 +24,7 @@
         <div class="orders_type_header">Принят <span>{{ acceptedOrders.length }}</span></div>
         
         <div class="orders_type_list">
-          <div :key="order.id" v-for="order in acceptedOrders">
+          <div :key="order.id" v-for="order in acceptedOrders" :class="{active: isActive(order.id)}">
             <div class="order_info" @click="getCurrentOrder(order.id)">
               <span class="order_info_name">{{order.courier_name}} <span class="order_info_name_num">(№ {{order.id}})</span></span>
               <span class="order_info_time"><span>Доставка до {{convertTime(order.registration_time)}}</span> <span>{{convertTime(order.restaurant_arrival_time)}}</span></span>
@@ -42,7 +42,7 @@
         <div class="orders_type_header">Готов к выдаче <span>{{ readyOrders.length }}</span></div>
         
         <div class="orders_type_list">
-          <div :key="order.id" v-for="order in readyOrders">
+          <div :key="order.id" v-for="order in readyOrders" :class="{active: isActive(order.id)}">
             <div class="order_info" @click="getCurrentOrder(order.id)">
               <span class="order_info_name">{{order.courier_name}} <span class="order_info_name_num">(№ {{order.id}})</span></span>
               <span class="order_info_time"><span>Доставка до {{convertTime(order.registration_time)}}</span> <span>{{convertTime(order.restaurant_arrival_time)}}</span></span>
@@ -83,12 +83,8 @@ export default {
     this.readyOrders = this.orders.filter((a)=> a.order_status === 3)
   },
   methods: {
-    showlist: (e) => {
-      // console.log(e)
-      e.target.parentElement.classList.toggle("active")
-    },
-    openOrder: (e) => {
-      console.log(e)
+    isActive(target) {
+      return target === this.$store.getters.getCurrentOrder.id
     },
     getCurrentOrder(id) {
       this.$store.dispatch("getCurrentOrder", id);
@@ -119,11 +115,7 @@ export default {
 
     }
     &_list {
-      
-      & > div {
-        background: #D6D8D9;
-      }
-      & > div:nth-child(odd){
+      .active {
         background: #fff;
       }
     }
@@ -136,8 +128,11 @@ export default {
     padding: 10px 5px;
     font-size: 14px;
 
+    & > span {
+      pointer-events: none;
+    }
     &:hover {
-      background: #39E27F;
+      background: #D6D8D9;
     }
 
     &_name {
